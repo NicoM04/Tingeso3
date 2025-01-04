@@ -37,7 +37,14 @@ const CreditDetails = () => {
     7: 'Rechazada',
     8: 'Cancelada por el Cliente',
     9: 'En Desembolso'
-};
+  };
+
+  const loanTypes = {
+    1: 'Primera Vivienda',
+    2: 'Primera Vivienda',
+    3: 'Propiedad comercial',
+    4: 'Remodelación',
+  };
 
   useEffect(() => {
     const fetchCreditDetails = async () => {
@@ -125,7 +132,7 @@ const CreditDetails = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1">
-                <strong>Tipo de Crédito:</strong> {credit.typeLoan || 'Cargando...'}
+                <strong>Tipo de Crédito:</strong> {loanTypes[credit.typeLoan] || 'Cargando...'}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -163,16 +170,18 @@ const CreditDetails = () => {
             </Grid>
           </Grid>
           <Box display="flex" justifyContent="space-between" mt={3}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                setActionToConfirm('cancel');
-                setOpenConfirmDialog(true);
-              }}
-            >
-              Cancelar Crédito
-            </Button>
+            {credit.state !== 8 && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setActionToConfirm('cancel');
+                  setOpenConfirmDialog(true);
+                }}
+              >
+                Cancelar Crédito
+              </Button>
+            )}
 
             {credit.state === 4 && (
               <Button

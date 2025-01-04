@@ -7,9 +7,7 @@ import {
     Paper, 
     Typography, 
     Box, 
-    CircularProgress,
-    Snackbar,
-    Alert
+    CircularProgress
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,18 +20,33 @@ const SimulateCredit = () => {
     const [error, setError] = useState({});
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();  // Hook de navegación
+    const navigate = useNavigate();
+
+    // Formatear número con separadores de miles
+    const formatNumber = (value) => {
+        return value.replace(/\D/g, '') // Eliminar caracteres no numéricos
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Agregar puntos como separadores de miles
+    };
 
     // Manejar el cambio de valores en los inputs y validación en tiempo real
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setCreditData({
-            ...creditData,
-            [name]: value
-        });
+
+        if (name === 'amount') {
+            const formattedValue = formatNumber(value);
+            setCreditData({
+                ...creditData,
+                [name]: formattedValue.replace(/\./g, '') // Guardar valor sin puntos
+            });
+        } else {
+            setCreditData({
+                ...creditData,
+                [name]: value
+            });
+        }
 
         // Validación en tiempo real
-        validate(name, value);
+        validate(name, name === 'amount' ? value.replace(/\./g, '') : value);
     };
 
     // Validar un campo específico basado en el nombre
@@ -42,15 +55,15 @@ const SimulateCredit = () => {
 
         switch (fieldName) {
             case 'amount':
-                if (!value || value <= 0) {
-                    tempErrors.amount = "El monto debe ser mayor a 0";
+                if (!value || value <= 10000000) {
+                    tempErrors.amount = "El monto debe ser mayor a 10.000.000";
                 } else {
                     delete tempErrors.amount;
                 }
                 break;
             case 'interestRate':
-                if (!value || value <= 0 || value > 7) {
-                    tempErrors.interestRate = "La tasa de interés debe ser mayor a 0 y menor o igual al 7%";
+                if (!value || value < 3.5 || value > 7) {
+                    tempErrors.interestRate = "La tasa de interés debe ser mayor o igual a 3.5 y menor o igual al 7%";
                 } else {
                     delete tempErrors.interestRate;
                 }
@@ -110,17 +123,17 @@ const SimulateCredit = () => {
             <Grid item xs={10} md={6} lg={4}>
                 <Paper elevation={3} style={{ padding: '2rem' }}>
                     <Typography variant="h5" align="center" gutterBottom>
-                        Simulación de Crédito
+                        Simulación de Crédito Hipotecario
                     </Typography>
                     <form onSubmit={handleSubmit}>
                         <TextField
                             label="Monto del Préstamo"
                             name="amount"
-                            type="number"
+                            type="text"
                             fullWidth
                             margin="normal"
                             variant="outlined"
-                            value={creditData.amount}
+                            value={formatNumber(creditData.amount)}
                             onChange={handleChange}
                             error={!!error.amount}
                             helperText={error.amount}
@@ -181,12 +194,11 @@ const SimulateCredit = () => {
                     )}
 
                     <Box textAlign="center" mt={2}>
-                        <Button variant="outlined"  onClick={handleReset}>
+                        <Button variant="outlined" onClick={handleReset}>
                             Restablecer
                         </Button>
                     </Box>
 
-                    {/* Botón para redirigir al usuario a la página principal */}
                     <Box textAlign="center" mt={2}>
                         <Button variant="outlined" onClick={handleGoHome}>
                             Ir a la página principal
@@ -195,7 +207,6 @@ const SimulateCredit = () => {
                 </Paper>
             </Grid>
 
-            {/* Indicador de carga */}
             {loading && (
                 <Box 
                     display="flex"

@@ -3,11 +3,13 @@ import { Grid, Paper, Typography, FormControl, FormLabel, RadioGroup, FormContro
 import CreditService from '../services/credit.service';
 import { useNavigate } from 'react-router-dom';
 
+
+
 const creditTypes = [
-    { id: 1, name: "Primera Vivienda", maxTerm: 30, interestRate: "3.5%-5%", description: "Ideal para compra de tu primera vivienda." },
-    { id: 2, name: "Segunda Vivienda", maxTerm: 20, interestRate: "4%-6%", description: "Perfecto para la adquisición de una segunda vivienda." },
-    { id: 3, name: "Tercera Vivienda", maxTerm: 25, interestRate: "5%-7%", description: "Para la compra de tu tercera vivienda." },
-    { id: 4, name: "Cuarta Vivienda", maxTerm: 15, interestRate: "4.5%-6%", description: "Ideal para la adquisición de una cuarta propiedad." },
+    { id: 1, name: "Primera Vivienda", maxTerm: 30, interestRate: "3.5% - 5%", description: "Ideal para compra de tu primera vivienda." },
+    { id: 2, name: "Segunda Vivienda", maxTerm: 20, interestRate: "4% - 6%", description: "Perfecto para la adquisición de una segunda vivienda." },
+    { id: 3, name: "Propiedades Comerciales ", maxTerm: 25, interestRate: "5% - 7%", description: "Para la compra de Propiedades Comerciales" },
+    { id: 4, name: "Remodelación", maxTerm: 15, interestRate: "4.5% - 6%", description: "Ideal para Remodelaciónes" },
 ];
 
 const CreditRequest = () => {
@@ -45,8 +47,8 @@ const CreditRequest = () => {
 
     // Validar monto
     const validateAmount = (value) => {
-        if (value <= 0) {
-            setErrorAmount('El monto debe ser mayor que 0');
+        if (value <= 10000000) {
+            setErrorAmount('El monto debe ser mayor que 10.000.000');
         } else {
             setErrorAmount('');
         }
@@ -108,7 +110,7 @@ const CreditRequest = () => {
             <Grid item xs={12} md={8}>
                 <Paper elevation={3} style={{ padding: '2rem' }}>
                     <Typography variant="h5" align="center" gutterBottom>
-                        Solicitar Crédito
+                        Solicitar Crédito Hipotecario
                     </Typography>
 
                     <FormControl component="fieldset" fullWidth margin="normal">
@@ -131,21 +133,22 @@ const CreditRequest = () => {
 
                     {selectedCreditType && (
                         <>
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                label="Monto del Préstamo"
-                                type="number"
-                                value={amount}
-                                onChange={(e) => {
-                                    const newAmount = e.target.value;
-                                    setAmount(newAmount);
-                                    validateAmount(newAmount);
-                                }}
-                                required
-                                error={!!errorAmount}
-                                helperText={errorAmount}
-                            />
+                        <TextField
+                            fullWidth
+                            margin="normal"
+                            label="Monto del Préstamo"
+                            type="text"
+                            value={amount.toLocaleString('es-CO', { maximumFractionDigits: 0 })}
+                            onChange={(e) => {
+                                const inputValue = e.target.value.replace(/[^\d]/g, ''); // Solo permite números
+                                const numericValue = parseInt(inputValue, 10) || 0;
+                                setAmount(numericValue);
+                                validateAmount(numericValue);
+                            }}
+                            required
+                            error={!!errorAmount}
+                            helperText={errorAmount}
+                        />
                             <TextField
                                 fullWidth
                                 margin="normal"

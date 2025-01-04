@@ -39,7 +39,13 @@ const CreditRequestDetail = () => {
     meetsBalanceYears: false,
     hasNoRecentWithdrawals: false,
   });
-
+  const creditTypeMap = {
+    1: 'Primera Vivienda',
+    2: 'Primera Vivienda',
+    3: 'Propiedad comercial',
+    4: 'Remodelación',
+  };
+  
   // Nuevos estados disponibles para la solicitud
   const statusOptions = [
     { id: 1, label: 'En Revisión Inicial' },
@@ -220,7 +226,13 @@ const CreditRequestDetail = () => {
             <Divider />
             <Grid container spacing={2} style={{ marginTop: '10px' }}>
               <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Nombre del Cliente:</strong> {user ? user.name : 'Cargando...'}</Typography></Grid>
-              <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Tipo de Crédito:</strong> {credit.typeLoan ? credit.typeLoan : 'Cargando...'}</Typography></Grid>
+              <Grid item xs={12} sm={6}>
+  <Typography variant="subtitle1">
+    <strong>Tipo de Crédito:</strong> 
+    {credit.typeLoan && creditTypeMap[credit.typeLoan] ? creditTypeMap[credit.typeLoan] : 'Desconocido'}
+  </Typography>
+</Grid>
+
               <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Estado:</strong> {credit.state}</Typography></Grid>
               <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Monto Solicitado:</strong> ${credit.amount}</Typography></Grid>
               <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Costo Total:</strong> ${Number(credit.totalCost).toFixed(0)}</Typography></Grid>
