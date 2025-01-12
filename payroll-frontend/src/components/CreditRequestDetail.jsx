@@ -45,7 +45,18 @@ const CreditRequestDetail = () => {
     3: 'Propiedad comercial',
     4: 'Remodelación',
   };
-  
+  const creditStates = {
+    1: 'En Revisión Inicial',
+    2: 'Pendiente de Documentación',
+    3: 'En Evaluación',
+    4: 'Pre-Aprobada',
+    5: 'En Aprobación Final',
+    6: 'Aprobada',
+    7: 'Rechazada',
+    8: 'Cancelada por el Cliente',
+    9: 'En Desembolso'
+  };
+
   // Nuevos estados disponibles para la solicitud
   const statusOptions = [
     { id: 1, label: 'En Revisión Inicial' },
@@ -129,7 +140,9 @@ const CreditRequestDetail = () => {
   };
 
   const checkRule = async (rule) => {
+    
     let result;
+
     switch (rule.id) {
       case 1:
         result = await CreditService.checkIncomeToPaymentRatio(credit, ruleInputs.monthlyIncome);
@@ -233,7 +246,7 @@ const CreditRequestDetail = () => {
   </Typography>
 </Grid>
 
-              <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Estado:</strong> {credit.state}</Typography></Grid>
+              <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Estado:</strong> {creditStates[credit.state]}</Typography></Grid>
               <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Monto Solicitado:</strong> ${credit.amount}</Typography></Grid>
               <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Costo Total:</strong> ${Number(credit.totalCost).toFixed(0)}</Typography></Grid>
               <Grid item xs={12} sm={6}><Typography variant="subtitle1"><strong>Fecha de Solicitud:</strong> {new Date(credit.requestDate).toLocaleDateString()}</Typography></Grid>

@@ -55,8 +55,8 @@ const SimulateCredit = () => {
 
         switch (fieldName) {
             case 'amount':
-                if (!value || value <= 10000000) {
-                    tempErrors.amount = "El monto debe ser mayor a 10.000.000";
+                if (!value || value <= 10000000 || value>1000000000) {
+                    tempErrors.amount = "El monto debe ser mayor a 10.000.000 y menor a 1.000.000.000";
                 } else {
                     delete tempErrors.amount;
                 }
@@ -96,7 +96,7 @@ const SimulateCredit = () => {
             setResult(response.data);
         } catch (error) {
             console.error("Error en simulateCredit:", error);
-            setResult({ error: "Error al simular el crédito, intenta más tarde." });
+            setResult({ error: "Error al simular el crédito, ingresa datos detro de los rangos indicados." });
         } finally {
             setLoading(false);
         }
